@@ -3,7 +3,7 @@ from random import randint
 class LoopCube:
     def __init__(self, size):
         self.size = size
-        self.faces = [[[randint(0,10) for col in range(self.size)] for row in range(self.size)] for face in range(6)]
+        self.faces = [[[0 for col in range(self.size)] for row in range(self.size)] for face in range(6)]
 
     def move_posrow(self, index):
         if index[1] + 1 >= self.size:
@@ -36,11 +36,12 @@ class LoopCube:
                 new_face = 2
                 new_row = self.size - 1
                 new_col = index[2]
-            return [new_face, new_row, new_col]
+            return (new_face, new_row, new_col)
         else:
-            return [index[0], index[1] + 1, index[2]]
+            return (index[0], index[1] + 1, index[2])
 
     def move_negrow(self, index):
+        print(f"!! {index}, size={self.size}")
         if index[1] - 1 < 0:
             new_face = None
             new_row = None
@@ -69,9 +70,9 @@ class LoopCube:
                 new_face = 3
                 new_row = 0
                 new_col = self.size - 1 - index[2]
-            return [new_face, new_row, new_col]
+            return (new_face, new_row, new_col)
         else:
-            return [index[0],index[1] - 1, index[2]]
+            return (index[0],index[1] - 1, index[2])
 
     def move_poscol(self, index):
         if index[2] + 1 >= self.size:
@@ -102,9 +103,9 @@ class LoopCube:
                 new_face = 1
                 new_row = 0
                 new_col = self.size - 1 - index[1]
-            return [new_face, new_row, new_col]
+            return (new_face, new_row, new_col)
         else:
-            return [index[0], index[1], index[2] + 1]
+            return (index[0], index[1], index[2] + 1)
 
     def move_negcol(self, index):
         if index[2] - 1 < 0:
@@ -135,9 +136,9 @@ class LoopCube:
                 new_face = 0
                 new_row = 0
                 new_col = index[1]
-            return [new_face, new_row, new_col]
+            return (new_face, new_row, new_col)
         else:
-            return [index[0], index[1], index[2] - 1]
+            return (index[0], index[1], index[2] - 1)
 
     # Index is of the form (face, row, col)
     def __getitem__(self, index):

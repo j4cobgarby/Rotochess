@@ -17,7 +17,7 @@ class Cubelet:
         pr.draw_cube_v([(n*3) - (self.size*self.cs)/2 + self.cs/2 for n in self.pos], self.dims, self.col)
 
 def main():
-    size = 80
+    size = 8
     cubelet_size = 3
 
     cube = [[[] for i in range(0,size)]for i in range(0,size)]

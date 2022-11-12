@@ -102,13 +102,13 @@ def main():
         pr.draw_cube(pr.Vector3(0,0,0), sz,sz,sz, pr.DARKGRAY)
 
         draw_xz_face(lc[0], pr.Vector3(0,sz/2,0), pr.Vector3(0,0,1), pr.Vector3(1,0,0), sz, pr.RED)
-        draw_xz_face(lc[1], pr.Vector3(0,-sz/2,0), pr.Vector3(0,0,-1), pr.Vector3(-1,0,0), sz, pr.ORANGE)
+        draw_xz_face(lc[1], pr.Vector3(0,-sz/2,0), pr.Vector3(0,0,1), pr.Vector3(-1,0,0), sz, pr.ORANGE)
 
         draw_xy_face(lc[4], pr.Vector3(0,0,sz/2), pr.Vector3(-1,0,0), pr.Vector3(0,-1,0), sz, pr.GREEN)
         draw_xy_face(lc[5], pr.Vector3(0,0,-sz/2), pr.Vector3(1,0,0), pr.Vector3(0,-1,0), sz, pr.YELLOW)
 
-        draw_zy_face(lc[2], pr.Vector3(-sz/2,0,0), pr.Vector3(0,0,1), pr.Vector3(0,-1,0), sz, pr.PURPLE)
-        draw_zy_face(lc[3], pr.Vector3(sz/2,0,0), pr.Vector3(0,0,1), pr.Vector3(0,1,0), sz, pr.BLUE)
+        draw_zy_face(lc[2], pr.Vector3(-sz/2,0,0), pr.Vector3(0,0,1), pr.Vector3(0,1,0), sz, pr.PURPLE)
+        draw_zy_face(lc[3], pr.Vector3(sz/2,0,0), pr.Vector3(0,0,1), pr.Vector3(0,-1,0), sz, pr.BLUE)
 
         pr.end_mode_3d()
         pr.end_drawing()

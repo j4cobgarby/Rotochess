@@ -19,7 +19,7 @@ class Cubelet:
 def main():
     size = 8
     cubelet_size = 3
-
+    pr.set_config_flags(pr.ConfigFlags.FLAG_MSAA_4X_HINT)
     cube = [[[] for i in range(0,size)]for i in range(0,size)]
 
     for y in range(0, size):
@@ -31,6 +31,7 @@ def main():
     pr.set_target_fps(60)
 
     camera = pr.Camera3D([18.0, 16.0, 18.0], [0.0, 0.0, 0.0], [0.0, 1.0, 0.0], 45.0, 0)
+    camera.projection = pr.CameraProjection.CAMERA_ORTHOGRAPHIC
     pr.set_camera_mode(camera, pr.CAMERA_FREE)
     pr.set_camera_alt_control(pr.KEY_LEFT_SHIFT)
 

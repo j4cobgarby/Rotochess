@@ -78,7 +78,7 @@ class ChessCube:
         for i in range(self.size):
             a = hold[i]
             hold[i] = self.pieces[1, self.size-1-i, self.size-1-n]
-            self.pieces[1, self.size-1-i, n] = a
+            self.pieces[1, self.size-1-i, self.size-1-n] = a
 
         # Read Write Front
         for i in range(self.size):
@@ -91,53 +91,57 @@ class ChessCube:
             self.pieces[0,i,n] = hold[i]
 
         if n == 0:
-            a = list(zip(*list(zip(*list(zip(*self.pieces[3][::-1]))[::-1]))[::-1]))
-            self.pieces[3] = a
+            a = list(zip(*list(zip(*list(zip(*self.pieces[2][::-1]))[::-1]))[::-1]))
+            a = [list(x) for x in a]
+            self.pieces[2] = a
             
 
         if n == self.size-1:
-            a = list(zip(*self.pieces[2][::-1]))
-            self.pieces[2] = a
+            a = list(zip(*self.pieces[3][::-1]))
+            a = [list(x) for x in a]
+            self.pieces[3] = a
         
 
-    def rotate_y(self):
+    def rotate_y(self,n):
         hold = [None]*self.size
 
         # Read Right
         for i in range(self.size):
-            hold[i] = self[3,n,i]
+            hold[i] = self.pieces[3,i,self.size-1-n]
 
         # Back
         for i in range(self.size):
             a = hold[i]
-            hold[i] = self.pieces[5, self.size-1-i, self.size-1-n]
-            self.pieces[5, self.size-1-i, self.size-1-n] = a
+            hold[i] = self.pieces[5, i, self.size-1-n]
+            self.pieces[5, i, self.size-1-n] = a
 
         # Left
         for i in range(self.size):
             a = hold[i]
-            hold[i] = self.pieces[2, self.size-1-i, self.size-1-n]
-            self.pieces[2, self.size-1-i, self.size-1-n] = a
+            hold[i] = self.pieces[2, self.size-1-i, n]
+            self.pieces[2, self.size-1-i, n] = a
 
         # Front
         for i in range(self.size):
             a = hold[i]
-            hold[i] = self.pieces[4, self.size-1-i, self.size-1-n]
-            self.pieces[4, self.size-1-i, self.size-1-n] = a
+            hold[i] = self.pieces[4, i, self.size-1-n]
+            self.pieces[4, i, self.size-1-n] = a
 
         # WriteRight
         for i in range(self.size):
-            self[3,n,i] = hold[i]
+            self.pieces[3,i,self.size-1-n] = hold[i]
 
         if n == 0 :
             a = list(zip(*self.pieces[1][::-1]))
+            a = [list(x) for x in a]
             self.pieces[1] = a # Down
 
         if n == self.size-1:
             a = list(zip(*list(zip(*list(zip(*self.pieces[0][::-1]))[::-1]))[::-1]))
+            a = [list(x) for x in a]
             self.pieces[0] = a
 
-    def rotate_z(self):
+    def rotate_z(self,n):
         hold = [None]*self.size
 
         # Read Up
@@ -148,28 +152,30 @@ class ChessCube:
         for i in range(self.size):
             a = hold[i]
             hold[i] = self.pieces[2,n,i]
-            self.pieces[2,n,i]
+            self.pieces[2,n,i] = a
 
         # Down
         for i in range(self.size):
             a = hold[i]
             hold[i] = self.pieces[1,n,i]
-            self.pieces[1,n,i]
+            self.pieces[1,n,i] = a 
 
         # Right
         for i in range(self.size):
             a = hold[i]
             hold[i] = self.pieces[3,n,i]
-            self.pieces[3,n,i]
+            self.pieces[3,n,i] = a
 
         # Write up
         for i in range(self.size):
-            self.pieces[0,i,n] = hold[i]
+            self.pieces[0,n,i] = hold[i]
 
         if n == 0:
-            a = list(zip(*list(zip(*list(zip(*self.pieces[5][::-1]))[::-1]))[::-1]))
+            a = list(zip(*self.pieces[5][::-1]))
+            a = [list(x) for x in a]
             self.pieces[5] = a #Back
 
         if n == self.size-1:
-            a = list(zip(*self.pieces[4][::-1]))
+            a = list(zip(*list(zip(*list(zip(*self.pieces[4][::-1]))[::-1]))[::-1]))
+            a = [list(x) for x in a]
             self.pieces[4] = a # Front

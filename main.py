@@ -3,6 +3,7 @@
 import pyray as pr
 import random
 from chesscube import ChessCube
+import time as t
 
 def main():
     size = 8
@@ -20,17 +21,69 @@ def main():
     pr.set_camera_mode(camera, pr.CAMERA_FREE)
     pr.set_camera_alt_control(pr.KEY_LEFT_SHIFT)
 
+    # Shaders
+    # Background
+    imBlank = pr.gen_image_color(1024, 1024, pr.WHITE)
+    bg_texture = pr.load_texture_from_image(imBlank)
+    pr.unload_image(imBlank)
+
+    grad = pr.load_shader("base.vs","bg.fs")
+    time = 0
+    timeLoc = pr.get_shader_location(grad, "uTime")
+    pr.set_shader_value(grad, timeLoc, time, pr.ShaderUniformDataType.SHADER_UNIFORM_FLOAT)
+
+    # Bloom
+    bloom = pr.load_shader("base.vs", "pps.fs")
+    target = pr.load_render_texture(pr.get_screen_width(), pr.get_screen_height())
+
     while not pr.window_should_close():
-        pr.update_camera(camera)
-        pr.begin_drawing()
-        pr.clear_background(pr.Color(182,191,239,255))
+        if pr.is_key_down(pr.KEY_W):
+            world.rotate_x(0)
+        if pr.is_key_down(pr.KEY_S):
+            world.rotate_y(0)
+        if pr.is_key_down(pr.KEY_D):
+            world.rotate_z(0)
+
+        # Render Cube
+        pr.begin_texture_mode(target)
+        pr.clear_background(pr.RAYWHITE)
+        
+        # Background Shader
+        time = pr.get_time()
+        pr.set_shader_value(grad,timeLoc,time, pr.ShaderUniformDataType.SHADER_UNIFORM_FLOAT)
+        pr.begin_shader_mode(grad)
+        pr.draw_texture(bg_texture, 0, 0, pr.WHITE)
+        pr.end_shader_mode()
+
         pr.begin_mode_3d(camera)
         
         world.draw()
 
         pr.end_mode_3d()
+        pr.end_texture_mode()
+
+        # Post Processing Shader
+
+        pr.update_camera(camera)
+        pr.begin_drawing()
+        pr.clear_background(pr.Color(182,191,239,255))
+
+        # Post Processing Shader
+        pr.begin_shader_mode(bloom)
+
+        pr.draw_texture_rec(
+            target.texture, 
+            pr.Rectangle(0, 0, target.texture.width, target.texture.height), 
+            pr.Vector2(0, 0), 
+            pr.WHITE
+        )
+
+        pr.end_shader_mode()
+
         pr.end_drawing()
     pr.close_window()
 
 if __name__ == "__main__":
     main()
+
+    pr.light

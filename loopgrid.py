@@ -20,20 +20,20 @@ class LoopCube:
                 new_face = 4
                 new_row = index[2]
                 new_col = self.size - 1
-            elif index[0] == 2:
+            elif index[0] == 3:
                 new_face = 4
                 new_row = self.size - 1
                 new_col = index[2]
-            elif index[0] == 3:
+            elif index[0] == 2:
                 new_face = 4
                 new_row = 0
                 new_col = self.size - 1 - index[2]
             elif index[0] == 4:
-                new_face = 3
+                new_face = 2
                 new_row = 0
                 new_col = self.size - 1 - index[2]
             elif index[0] == 5:
-                new_face = 2
+                new_face = 3
                 new_row = self.size - 1
                 new_col = index[2]
             return (new_face, new_row, new_col)
@@ -54,20 +54,20 @@ class LoopCube:
                 new_face = 5
                 new_row = self.size - 1 - index[2]
                 new_col = self.size - 1
-            elif index[0] == 2:
+            elif index[0] == 3:
                 new_face = 5
                 new_row = self.size - 1
                 new_col = index[2]
-            elif index[0] == 3:
+            elif index[0] == 2:
                 new_face = 5
                 new_row = 0
                 new_col = self.size - 1 - index[2]
             elif index[0] == 4:
-                new_face = 2
+                new_face = 3
                 new_row = self.size - 1
                 new_col = index[2]
             elif index[0] == 5:
-                new_face = 3
+                new_face = 2
                 new_row = 0
                 new_col = self.size - 1 - index[2]
             return (new_face, new_row, new_col)
@@ -80,18 +80,18 @@ class LoopCube:
             new_row = None
             new_col = None
             if index[0] == 0:
-                new_face = 2
-                new_row = index[1]
-                new_col = 0
-            elif index[0] == 1:
                 new_face = 3
                 new_row = index[1]
                 new_col = 0
-            elif index[0] == 2:
-                new_face = 1
+            elif index[0] == 1:
+                new_face = 2
                 new_row = index[1]
                 new_col = 0
             elif index[0] == 3:
+                new_face = 1
+                new_row = index[1]
+                new_col = 0
+            elif index[0] == 2:
                 new_face = 0
                 new_row = index[1]
                 new_col = 0
@@ -113,18 +113,18 @@ class LoopCube:
             new_row = None
             new_col = None
             if index[0] == 0:
-                new_face = 3
-                new_row = index[1]
-                new_col = self.size - 1
-            elif index[0] == 1:
                 new_face = 2
                 new_row = index[1]
                 new_col = self.size - 1
-            elif index[0] == 2:
-                new_face = 0
+            elif index[0] == 1:
+                new_face = 3
                 new_row = index[1]
                 new_col = self.size - 1
             elif index[0] == 3:
+                new_face = 0
+                new_row = index[1]
+                new_col = self.size - 1
+            elif index[0] == 2:
                 new_face = 1
                 new_row = index[1]
                 new_col = self.size - 1

@@ -76,22 +76,22 @@ def main():
             lc[pos] = 0
             pos = lc.move_negrow(pos)
             lc[pos] = 1
-            print(pos)
+            print(lc)
         if pr.is_key_pressed(pr.KeyboardKey.KEY_DOWN):
             lc[pos] = 0
             pos = lc.move_posrow(pos)
             lc[pos] = 1
-            print(pos)
+            print(lc)
         if pr.is_key_pressed(pr.KeyboardKey.KEY_LEFT):
             lc[pos] = 0
             pos = lc.move_negcol(pos)
             lc[pos] = 1
-            print(pos)
+            print(lc)
         if pr.is_key_pressed(pr.KeyboardKey.KEY_RIGHT):
             lc[pos] = 0
             pos = lc.move_poscol(pos)
             lc[pos] = 1
-            print(pos)
+            print(lc)
 
         pr.update_camera(camera)
         pr.begin_drawing()

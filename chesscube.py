@@ -13,7 +13,7 @@ class Cubelet:
     def draw(self):
         pr.draw_cube_v([(n*3) - (self.size*self.cs)/2 + self.cs/2 for n in self.pos], self.dims, self.col)
 
-class ChessCube():
+class ChessCube:
     def __init__(self,size,cubelet_size):
         self.size = size
         self.cubelet_size = cubelet_size
@@ -29,6 +29,30 @@ class ChessCube():
 
         # Initilise empty piece array
         self.pieces = [[[None for i in range(size)] for i in range(size)] for i in range (6)]
+
+    # ^
+    # | Y
+    # |      X
+    # |___----->
+    #  \
+    #   \ Z
+    #    v
+    
+    #     +---+
+    #     | B |
+    # +---+---+---+---+
+    # | U | L | D | R |
+    # +---+---+---+---+
+    #     | F |
+    #     +---+
+    #
+    # +---+---+---+---+---+
+    # | U | L | D | R | B |
+    # +---+---+---+---+---+
+    #
+    # U | D | L | R | B | F 
+    # 0 | 1 | 2 | 3 | 4 | 5
+
 
     def draw(self):
         for y in range(0, self.size):

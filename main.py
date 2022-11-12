@@ -12,7 +12,7 @@ class Cubelet:
         pr.draw_cube_v(self.pos, [1,1,1], self.col)
 
 def main():
-    cube = [[[]]*3]*3
+    cube = [[[] for i in range(0,3)]for i in range(0,3)]
 
     for y in range(0, 3):
         for z in range(0, 3):

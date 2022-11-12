@@ -143,7 +143,7 @@ class LoopCube:
     def __getitem__(self, index):
         if type(index) == int:
             return self.faces[index]
-        elif type(index) == list:
+        elif type(index) == tuple:
             if 0 <= index[1] < self.size and 0 <= index[2] < self.size:
                 return self.faces[index[0]][index[1]][index[2]]
             else:
@@ -151,10 +151,9 @@ class LoopCube:
         raise KeyError("Must be [f] or [f,r,c]")
 
     def __setitem__(self, index, newvalue):
-        print(type(index))
         if type(index) == int:
             self.faces[index] = newvalue[::]
-        elif type(index) == list:
+        elif type(index) == tuple:
             if 0 <= index[1] < self.size and 0 <= index[2] < self.size:
                 self.faces[index[0]][index[1]][index[2]] = newvalue
             else:

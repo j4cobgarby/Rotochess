@@ -1,4 +1,5 @@
 import pyray as pr
+from loopgrid import LoopCube
 
 class Cubelet:
     def __init__(self, pos, size, cs):
@@ -21,14 +22,13 @@ class ChessCube:
 
         # Initilise Cubelet Array
         self.cubelets = [[[] for i in range(0,size)]for i in range(0,size)]
+        self.pieces = LoopCube(size)
 
         for y in range(0, size):
             for z in range(0, size):
                 for x in range(0, size):
                     self.cubelets[y][z].append(Cubelet([x,y,z], size, cubelet_size))
 
-        # Initilise empty piece array
-        self.pieces = [[[None for i in range(size)] for i in range(size)] for i in range (6)]
 
     # ^
     # | Y
@@ -71,31 +71,31 @@ class ChessCube:
         # Read write Back
         for i in range(self.size):
             a = hold[i]
-            hold[i] = self.pieces[5, n, size-1-i]
-            self.pieces[5, n, size-1-i] = a
+            hold[i] = self.pieces[5, n, self.size-1-i]
+            self.pieces[5, n, self.size-1-i] = a
             
         # Read Write Down
         for i in range(self.size):
             a = hold[i]
-            hold[i] = self.pieces[1, size-1-i, size-1-n]
-            self.pieces[1, size-1-i, n] = a
+            hold[i] = self.pieces[1, self.size-1-i, self.size-1-n]
+            self.pieces[1, self.size-1-i, n] = a
 
         # Read Write Front
         for i in range(self.size):
             a = hold[i]
-            hold[i] = self.pieces[4, size-1-n, i]
-            self.pieces[4, size-1-n, i] = a
+            hold[i] = self.pieces[4, self.size-1-n, i]
+            self.pieces[4, self.size-1-n, i] = a
 
         # Write Up
         for i in range(self.size):
-            self.peices[0,i,n] = hold[i]
+            self.pieces[0,i,n] = hold[i]
 
         if n == 0:
             a = list(zip(*list(zip(*list(zip(*self.pieces[3][::-1]))[::-1]))[::-1]))
             self.pieces[3] = a
             
 
-        if n == size-1:
+        if n == self.size-1:
             a = list(zip(*self.pieces[2][::-1]))
             self.pieces[2] = a
         
@@ -110,20 +110,20 @@ class ChessCube:
         # Back
         for i in range(self.size):
             a = hold[i]
-            hold[i] = self.pieces[5, size-1-i, size-1-n]
-            self.pieces[5, size-1-i, size-1-n] = a
+            hold[i] = self.pieces[5, self.size-1-i, self.size-1-n]
+            self.pieces[5, self.size-1-i, self.size-1-n] = a
 
         # Left
         for i in range(self.size):
             a = hold[i]
-            hold[i] = self.pieces[2, size-1-i, size-1-n]
-            self.pieces[2, size-1-i, size-1-n] = a
+            hold[i] = self.pieces[2, self.size-1-i, self.size-1-n]
+            self.pieces[2, self.size-1-i, self.size-1-n] = a
 
         # Front
         for i in range(self.size):
             a = hold[i]
-            hold[i] = self.pieces[4, size-1-i, size-1-n]
-            self.pieces[4, size-1-i, size-1-n] = a
+            hold[i] = self.pieces[4, self.size-1-i, self.size-1-n]
+            self.pieces[4, self.size-1-i, self.size-1-n] = a
 
         # WriteRight
         for i in range(self.size):
@@ -133,7 +133,7 @@ class ChessCube:
             a = list(zip(*self.pieces[1][::-1]))
             self.pieces[1] = a # Down
 
-        if n == size-1:
+        if n == self.size-1:
             a = list(zip(*list(zip(*list(zip(*self.pieces[0][::-1]))[::-1]))[::-1]))
             self.pieces[0] = a
 
@@ -170,6 +170,6 @@ class ChessCube:
             a = list(zip(*list(zip(*list(zip(*self.pieces[5][::-1]))[::-1]))[::-1]))
             self.pieces[5] = a #Back
 
-        if n == size-1:
+        if n == self.size-1:
             a = list(zip(*self.pieces[4][::-1]))
             self.pieces[4] = a # Front

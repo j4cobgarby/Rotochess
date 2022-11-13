@@ -1,6 +1,5 @@
 # Blender 3.3.1
 # www.blender.org
-mtllib Knight.mtl
 o Knight
 v -1.000000 0.000000 1.000000
 v -0.067458 4.333468 0.487166

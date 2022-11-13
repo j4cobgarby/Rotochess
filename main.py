@@ -2,23 +2,29 @@
 
 import pyray as pr
 import random
-from chesscube import ChessCube
 import time as t
 
 def main():
-    size = 6
+    size = 3
     cubelet_size = 2
     pr.set_config_flags(pr.ConfigFlags.FLAG_MSAA_4X_HINT)
     pr.set_config_flags(pr.ConfigFlags.FLAG_VSYNC_HINT)
 
     pr.init_window(700, 700, "Rotochess")
+    
+    #####################
+    # POST INIT IMPORTS #
+    #####################
+    
+    from chesscube import ChessCube
+
     pr.set_target_fps(60)
 
     world = ChessCube(size,cubelet_size)
 
     camera = pr.Camera3D([18.0, 16.0, 18.0], [0.0, 0.0, 0.0], [0.0, 1.0, 0.0], 45.0, 0)
     camera.projection = pr.CameraProjection.CAMERA_ORTHOGRAPHIC
-    pr.set_camera_mode(camera, pr.CAMERA_FREE)
+    pr.set_camera_mode(camera, pr.CAMERA_ORBITAL)
     pr.set_camera_alt_control(pr.KEY_LEFT_SHIFT)
 
     # Shaders
@@ -33,8 +39,10 @@ def main():
     pr.set_shader_value(grad, timeLoc, time, pr.ShaderUniformDataType.SHADER_UNIFORM_FLOAT)
 
     # Bloom
-    bloom = pr.load_shader("shaders/base.vs", "shaders/pps.fs")
+    bloom = pr.load_shader("shaders/base.vs", "shaders/base.fs")
     target = pr.load_render_texture(pr.get_screen_width(), pr.get_screen_height())
+
+    camera.fovy = world.size*1.87+2
 
     while not pr.window_should_close():
         if pr.is_key_down(pr.KEY_W):

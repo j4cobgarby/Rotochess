@@ -1,9 +1,11 @@
 from random import randint
+import piece
+import random
 
 class LoopCube:
     def __init__(self, size):
         self.size = size
-        self.faces = [[[face for col in range(self.size)] for row in range(self.size)] for face in range(6)]
+        self.faces = [[[[face,piece.Piece()] for col in range(self.size)] for row in range(self.size)] for face in range(6)]
 
     def move_posrow(self, index):
         if index[1] + 1 >= self.size:

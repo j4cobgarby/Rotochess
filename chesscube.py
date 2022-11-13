@@ -57,7 +57,8 @@ class ChessCube:
         for r in range(size):
             for c in range(size):
                 offset = addv(sclv(r_dir, r), sclv(c_dir, c))
-                pr.draw_cube(addv(offset, face_center), 0.8,0.1,0.8, cols[face[r][c]])
+                pr.draw_cube(addv(offset, face_center), 0.8,0.1,0.8, cols[face[r][c][0]])
+                pr.draw_model(face[r][c][1].mesh,addv(offset, face_center),0.2,pr.WHITE)
                 #pr.draw_cube(addv(face_center, pr.Vector3(r,0,c)), 0.8, 0.05, 0.8, pr.WHITE if face[r][c] == 1 else col)
 
     def draw_xy_face(self,face, face_center, r_dir, c_dir, size):
@@ -71,7 +72,8 @@ class ChessCube:
         for r in range(size):
             for c in range(size):
                 offset = addv(sclv(r_dir, r), sclv(c_dir, c))
-                pr.draw_cube(addv(offset, face_center), 0.8, 0.8, 0.1, cols[face[r][c]])
+                pr.draw_cube(addv(offset, face_center), 0.8, 0.8, 0.1, cols[face[r][c][0]])
+                pr.draw_model(face[r][c][1].mesh,addv(offset, face_center),0.2,pr.WHITE)
 
     def draw_zy_face(self,face, face_center, r_dir, c_dir, size):
         dirsum = addv(r_dir, c_dir)
@@ -84,7 +86,8 @@ class ChessCube:
         for r in range(size):
             for c in range(size):
                 offset = addv(sclv(r_dir, r), sclv(c_dir, c))
-                pr.draw_cube(addv(offset, face_center), 0.1, 0.8, 0.8, cols[face[r][c]])
+                pr.draw_cube(addv(offset, face_center), 0.1, 0.8, 0.8, cols[face[r][c][0]])
+                pr.draw_model(face[r][c][1].mesh,addv(offset, face_center),0.2,pr.WHITE)
 
 
     def draw(self):

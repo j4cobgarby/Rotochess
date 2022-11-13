@@ -11,6 +11,8 @@ def main():
     pr.set_config_flags(pr.ConfigFlags.FLAG_VSYNC_HINT)
 
     pr.init_window(700, 700, "Rotochess")
+
+    from piece import Piece
     
     #####################
     # POST INIT IMPORTS #
@@ -51,6 +53,7 @@ def main():
     making_move = False
     piece_to_move = None
     dragging = 0
+    player_to_move = Piece.WHITE
 
     rot_table = [
         [[1,0,0,0],[3,0,0,0],[0,0,1,0],[0,0,3,0]], # Up
@@ -107,14 +110,15 @@ def main():
                         making_move = False
                         world.pieces[world.mouse][1] = world.pieces[piece_to_move][1]
                         world.pieces[piece_to_move][1] = None
+                        player_to_move = Piece.WHITE if player_to_move == Piece.BLACK else Piece.BLACK
                     else:
                         print("Bad")
                 else:
-                    if world.pieces[world.mouse][1] != None:
+                    if world.pieces[world.mouse][1] != None and world.pieces[world.mouse][1].side == player_to_move:
                         making_move = True
                         piece_to_move = world.mouse
                         print("Ready to move")
-                        
+                   
                 if dragging == 0:
                     print("Click")
                     dragging = 1
@@ -122,17 +126,20 @@ def main():
                 if dragging == 1:
                     if last_mouse != world.mouse:
                         dragging = 2
-
                         print("Going")
+                        
                         if last_mouse[0] == world.mouse[0]:
+                            has_turned = False
                             if last_mouse[1] == world.mouse[1] +1:
-                                world.spin(rot_table[last_mouse[0]][0],last_mouse[2])
+                                world.spin(rot_table[last_mouse[0]][0],last_mouse[2]); has_turned = True
                             if last_mouse[1] == world.mouse[1] -1:
-                                world.spin(rot_table[last_mouse[0]][1],last_mouse[2])
+                                world.spin(rot_table[last_mouse[0]][1],last_mouse[2]); has_turned = True
                             if last_mouse[2] == world.mouse[2] +1:
-                                world.spin(rot_table[last_mouse[0]][2],last_mouse[1])
+                                world.spin(rot_table[last_mouse[0]][2],last_mouse[1]); has_turned = True
                             if last_mouse[2] == world.mouse[2] -1:
-                                world.spin(rot_table[last_mouse[0]][3],last_mouse[1])
+                                world.spin(rot_table[last_mouse[0]][3],last_mouse[1]); has_turned = True
+                            if has_turned:
+                                player_to_move = Piece.WHITE if player_to_move == Piece.BLACK else Piece.BLACK
             if pr.is_mouse_button_up(pr.MOUSE_LEFT_BUTTON):
                 dragging = 0
         pr.update_camera(camera)

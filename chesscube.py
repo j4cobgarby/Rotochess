@@ -51,17 +51,11 @@ class ChessCube:
         self.mouse = (0,0,0)
         self.mousedist = 100000
 
-
         # Initilise Cubelet Array
         self.cubelets = [[[] for i in range(0,size)]for i in range(0,size)]
         self.pieces = LoopCube(size)
         self.pieces[0, size//2, size//2] = [0, Bishop(Piece.BLACK)]
-
-        m = self.pieces.get_valid_moves(0, self.size//2, self.size//2)
-        for mv in m:
-            self.pieces[mv][0] = 6
-
-        print(m)
+        self.pieces[0, 1, 1] = [0, Rook(Piece.WHITE)]
     
     def spin(self,sides,n):
         if sides[3]:

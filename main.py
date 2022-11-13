@@ -6,8 +6,8 @@ from chesscube import ChessCube
 import time as t
 
 def main():
-    size = 8
-    cubelet_size = 3
+    size = 6
+    cubelet_size = 2
     pr.set_config_flags(pr.ConfigFlags.FLAG_MSAA_4X_HINT)
     pr.set_config_flags(pr.ConfigFlags.FLAG_VSYNC_HINT)
 
@@ -27,25 +27,28 @@ def main():
     bg_texture = pr.load_texture_from_image(imBlank)
     pr.unload_image(imBlank)
 
-    grad = pr.load_shader("base.vs","bg.fs")
+    grad = pr.load_shader("shaders/base.vs","shaders/bg.fs")
     time = 0
     timeLoc = pr.get_shader_location(grad, "uTime")
     pr.set_shader_value(grad, timeLoc, time, pr.ShaderUniformDataType.SHADER_UNIFORM_FLOAT)
 
     # Bloom
-    bloom = pr.load_shader("base.vs", "pps.fs")
+    bloom = pr.load_shader("shaders/base.vs", "shaders/pps.fs")
     target = pr.load_render_texture(pr.get_screen_width(), pr.get_screen_height())
 
     while not pr.window_should_close():
         if pr.is_key_down(pr.KEY_W):
-            world.rotate_x(0)
+            world.rotate_x(random.randrange(world.size))
         if pr.is_key_down(pr.KEY_S):
-            world.rotate_y(0)
+            world.rotate_y(random.randrange(world.size))
         if pr.is_key_down(pr.KEY_D):
-            world.rotate_z(0)
+            world.rotate_z(random.randrange(world.size))
+
+        pr.update_camera(camera)
 
         # Render Cube
-        pr.begin_texture_mode(target)
+        pr.begin_texture_mode(target) # START TEXTURE
+        
         pr.clear_background(pr.RAYWHITE)
         
         # Background Shader
@@ -60,20 +63,19 @@ def main():
         world.draw()
 
         pr.end_mode_3d()
-        pr.end_texture_mode()
+
+        pr.end_texture_mode() # END TEXTURE
 
         # Post Processing Shader
 
-        pr.update_camera(camera)
         pr.begin_drawing()
-        pr.clear_background(pr.Color(182,191,239,255))
 
         # Post Processing Shader
         pr.begin_shader_mode(bloom)
 
         pr.draw_texture_rec(
             target.texture, 
-            pr.Rectangle(0, 0, target.texture.width, target.texture.height), 
+            pr.Rectangle(0, 0, target.texture.width, -target.texture.height), 
             pr.Vector2(0, 0), 
             pr.WHITE
         )

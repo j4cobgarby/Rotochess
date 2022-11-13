@@ -1,18 +1,16 @@
 import pyray as pr
 from loopgrid import LoopCube
 
-class Cubelet:
-    def __init__(self, pos, size, cs):
-        self.dims = [cs, cs, cs]
-        self.pos = [n for n in pos]
-        self.pieces = [None, None, None, None, None, None] # up,down,left,right,front,back
-        self.col = pr.Color(60, 124, 58, 255) \
-            if (self.pos[0] + self.pos[1]*3 + self.pos[2] * 9) % 2 != 0 else pr.WHITE
-        self.cs = cs
-        self.size = size
+cols = [pr.RED,pr.ORANGE,pr.GREEN,pr.YELLOW,pr.PURPLE,pr.BLUE,pr.WHITE]
 
-    def draw(self):
-        pr.draw_cube_v([(n*3) - (self.size*self.cs)/2 + self.cs/2 for n in self.pos], self.dims, self.col)
+def addv(v1, v2):
+        return pr.Vector3(v1.x + v2.x, v1.y + v2.y, v1.z + v2.z)
+
+def sclv(v1, s):
+    return pr.Vector3(v1.x * s, v1.y * s, v1.z * s)
+
+def mulv(v1, v2):
+    return pr.Vector3(v1.x * v2.x, v1.y * v2.y, v1.z * v2.z)
 
 class ChessCube:
     def __init__(self,size,cubelet_size):
@@ -23,11 +21,6 @@ class ChessCube:
         # Initilise Cubelet Array
         self.cubelets = [[[] for i in range(0,size)]for i in range(0,size)]
         self.pieces = LoopCube(size)
-
-        for y in range(0, size):
-            for z in range(0, size):
-                for x in range(0, size):
-                    self.cubelets[y][z].append(Cubelet([x,y,z], size, cubelet_size))
 
 
     # ^
@@ -53,13 +46,59 @@ class ChessCube:
     # U | D | L | R | F | B 
     # 0 | 1 | 2 | 3 | 4 | 5
 
+    def draw_xz_face(self,face, face_center, r_dir, c_dir, size):
+        dirsum = addv(r_dir, c_dir)
+        offs = sclv(dirsum, -0.5)
+        dirsum = sclv(dirsum, size/2)
+        dirsum = addv(dirsum, offs)
+        dirsum = sclv(dirsum, -1)
+        face_center = addv(face_center, dirsum)
+
+        for r in range(size):
+            for c in range(size):
+                offset = addv(sclv(r_dir, r), sclv(c_dir, c))
+                pr.draw_cube(addv(offset, face_center), 0.8,0.1,0.8, cols[face[r][c]])
+                #pr.draw_cube(addv(face_center, pr.Vector3(r,0,c)), 0.8, 0.05, 0.8, pr.WHITE if face[r][c] == 1 else col)
+
+    def draw_xy_face(self,face, face_center, r_dir, c_dir, size):
+        dirsum = addv(r_dir, c_dir)
+        offs = sclv(dirsum, -0.5)
+        dirsum = sclv(dirsum, size/2)
+        dirsum = addv(dirsum, offs)
+        dirsum = sclv(dirsum, -1)
+        face_center = addv(face_center, dirsum) # Face center is now the point where r=0, c=0
+
+        for r in range(size):
+            for c in range(size):
+                offset = addv(sclv(r_dir, r), sclv(c_dir, c))
+                pr.draw_cube(addv(offset, face_center), 0.8, 0.8, 0.1, cols[face[r][c]])
+
+    def draw_zy_face(self,face, face_center, r_dir, c_dir, size):
+        dirsum = addv(r_dir, c_dir)
+        offs = sclv(dirsum, -0.5)
+        dirsum = sclv(dirsum, size/2)
+        dirsum = addv(dirsum, offs)
+        dirsum = sclv(dirsum, -1)
+        face_center = addv(face_center, dirsum) # Face center is now the point where r=0, c=0
+
+        for r in range(size):
+            for c in range(size):
+                offset = addv(sclv(r_dir, r), sclv(c_dir, c))
+                pr.draw_cube(addv(offset, face_center), 0.1, 0.8, 0.8, cols[face[r][c]])
+
 
     def draw(self):
-        for y in range(0, self.size):
-            for z in range(0, self.size):
-                for x in range(0, self.size):
-                    if x in [0, self.size-1] or y in [0, self.size-1] or z in [0, self.size-1]:
-                        self.cubelets[y][z][x].draw()
+        sz = self.size
+        pr.draw_cube(pr.Vector3(0,0,0), sz,sz,sz, pr.DARKGRAY)
+
+        self.draw_xz_face(self.pieces[0], pr.Vector3(0,sz/2,0), pr.Vector3(0,0,1), pr.Vector3(1,0,0), sz)
+        self.draw_xz_face(self.pieces[1], pr.Vector3(0,-sz/2,0), pr.Vector3(0,0,1), pr.Vector3(-1,0,0), sz)
+
+        self.draw_xy_face(self.pieces[4], pr.Vector3(0,0,sz/2), pr.Vector3(-1,0,0), pr.Vector3(0,-1,0), sz)
+        self.draw_xy_face(self.pieces[5], pr.Vector3(0,0,-sz/2), pr.Vector3(1,0,0), pr.Vector3(0,-1,0), sz)
+
+        self.draw_zy_face(self.pieces[2], pr.Vector3(-sz/2,0,0), pr.Vector3(0,0,1), pr.Vector3(0,1,0), sz)
+        self.draw_zy_face(self.pieces[3], pr.Vector3(sz/2,0,0), pr.Vector3(0,0,1), pr.Vector3(0,-1,0), sz)
 
     def rotate_x(self,n):
         hold = [None]*self.size

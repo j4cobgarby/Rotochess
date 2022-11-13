@@ -50,12 +50,14 @@ class ChessCube:
         self.ray = None
         self.mouse = (0,0,0)
         self.mousedist = 100000
+        self.to_move = None
+        self.making_move = False
+
 
         # Initilise Cubelet Array
         self.cubelets = [[[] for i in range(0,size)]for i in range(0,size)]
         self.pieces = LoopCube(size)
         self.pieces[0, size//2, size//2] = [0, Bishop(Piece.BLACK)]
-        self.pieces[0, 1, 1] = [0, Rook(Piece.WHITE)]
     
     def spin(self,sides,n):
         if sides[3]:
@@ -101,6 +103,10 @@ class ChessCube:
         dirsum = sclv(dirsum, -1)
         face_center = addv(face_center, dirsum) # Face center is now the point where r=0, c=0
 
+        valid_moves = []
+        if self.making_move:
+            valid_moves = self.pieces.get_valid_moves(*self.to_move)
+
         for r in range(size):
             for c in range(size):
                 offset = addv(sclv(r_dir, r), sclv(c_dir, c))
@@ -112,6 +118,7 @@ class ChessCube:
                 bl = addv(addv(offset, face_center),sclv(face_sizes[face_num], -0.5))
 
                 ra = pr.get_ray_collision_box(self.ray, pr.BoundingBox(bl, tr)) 
+
                 if ra.hit:
                     if ra.distance < self.mousedist:
                         self.mouse = (face_num,r,c)
@@ -119,6 +126,8 @@ class ChessCube:
                         co = pr.GREEN
                     else:
                         co = cols[face[r][c][0]]
+                elif [face, r,c] in valid_moves:
+                    co = cols[pr.BEIGE]
                 else:
                     co = cols[face[r][c][0]]
 

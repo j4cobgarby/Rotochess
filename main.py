@@ -50,8 +50,8 @@ def main():
     ani_state = -1
     running = False
 
-    making_move = False
-    piece_to_move = None
+    world.making_move = False
+    world.to_move = None
     dragging = 0
     player_to_move = Piece.WHITE
 
@@ -104,19 +104,19 @@ def main():
                 world.rotate_z(random.randrange(world.size))
 
             if pr.is_mouse_button_down(pr.MOUSE_LEFT_BUTTON):
-                if making_move:
-                    if world.mouse in world.pieces.get_valid_moves(*piece_to_move):
+                if world.making_move:
+                    if world.mouse in world.pieces.get_valid_moves(*world.to_move):
                         print("Good")
-                        making_move = False
-                        world.pieces[world.mouse][1] = world.pieces[piece_to_move][1]
-                        world.pieces[piece_to_move][1] = None
+                        world.making_move = False
+                        world.pieces[world.mouse][1] = world.pieces[world.to_move][1]
+                        world.pieces[world.to_move][1] = None
                         player_to_move = Piece.WHITE if player_to_move == Piece.BLACK else Piece.BLACK
                     else:
                         print("Bad")
                 else:
                     if world.pieces[world.mouse][1] != None and world.pieces[world.mouse][1].side == player_to_move:
-                        making_move = True
-                        piece_to_move = world.mouse
+                        world.making_move = True
+                        world.to_move = world.mouse
                         print("Ready to move")
                    
                 if dragging == 0:

@@ -62,6 +62,17 @@ class ChessCube:
             self.pieces[mv][0] = 6
 
         print(m)
+    
+    def spin(self,sides,n):
+        if sides[3]:
+            n = self.size-1-n
+        print(sides)
+        for i in range(sides[0]):
+            self.rotate_x(n)
+        for i in range(sides[1]):
+            self.rotate_y(n)
+        for i in range(sides[2]):
+            self.rotate_z(n)
 
 
     # ^
@@ -113,9 +124,9 @@ class ChessCube:
                         self.mousedist = ra.distance
                         co = pr.GREEN
                     else:
-                        co = pr.WHITE
+                        co = cols[face[r][c][0]]
                 else:
-                    co = pr.WHITE
+                    co = cols[face[r][c][0]]
 
                 pr.draw_model_ex(cube, addv(offset, face_center), rots[face_num][0],rots[face_num][1],face_sizes[0],co)
 

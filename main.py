@@ -48,10 +48,21 @@ def main():
     ani_state = -1
     running = False
 
+    dragging = 0
 
+    rot_table = [
+        [[1,0,0,0],[3,0,0,0],[0,0,1,0],[0,0,3,0]], # Up
+        [[3,0,0,1],[1,0,0,1],[0,0,1,0],[0,0,3,0]], # Down
+        [[0,3,0,0],[0,1,0,0],[0,0,1,0],[0,0,3,0]], # Left
+        [[0,1,0,1],[0,3,0,1],[0,0,1,0],[0,0,3,0]], # Right
+        [[0,1,0,1],[0,3,0,1],[1,0,0,1],[3,0,0,1]], # Front
+        [[0,1,0,1],[0,3,0,1],[3,0,0,0],[1,0,0,0]], # Back
+
+
+    ]
 
     while not pr.window_should_close():
-        
+        pr.set_shader_value(grad, timeLoc, pr.get_time(), pr.ShaderUniformDataType.SHADER_UNIFORM_FLOAT)
         if ani_state == -1:
             if pr.is_key_down(pr.KEY_SPACE):
                 ani_state = 0
@@ -87,9 +98,27 @@ def main():
             if pr.is_key_down(pr.KEY_D):
                 world.rotate_z(random.randrange(world.size))
 
-            if pr.is_key_down(pr.MOUSE_LEFT_BUTTON):
-                pass
+            if pr.is_mouse_button_down(pr.MOUSE_LEFT_BUTTON):
+                if dragging == 0:
+                    print("Click")
+                    dragging = 1
+                    last_mouse = world.mouse
+                if dragging == 1:
+                    if last_mouse != world.mouse:
+                        dragging = 2
 
+                        print("Going")
+                        if last_mouse[0] == world.mouse[0]:
+                            if last_mouse[1] == world.mouse[1] +1:
+                                world.spin(rot_table[last_mouse[0]][0],last_mouse[2])
+                            if last_mouse[1] == world.mouse[1] -1:
+                                world.spin(rot_table[last_mouse[0]][1],last_mouse[2])
+                            if last_mouse[2] == world.mouse[2] +1:
+                                world.spin(rot_table[last_mouse[0]][2],last_mouse[1])
+                            if last_mouse[2] == world.mouse[2] -1:
+                                world.spin(rot_table[last_mouse[0]][3],last_mouse[1])
+            if pr.is_mouse_button_up(pr.MOUSE_LEFT_BUTTON):
+                dragging = 0
         pr.update_camera(camera)
         # Update lighting
 

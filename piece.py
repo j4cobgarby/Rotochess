@@ -37,27 +37,38 @@ class Piece:
     def __init__(self, side):
         self.mesh = random.choice(msh)
         self.side = side
+        
+        if self.side:
+            self.colour = pr.WHITE
+        else:
+            self.colour = pr.GRAY
 
 class Knight(Piece):
     def __init__(self, side):
+        super().__init__(side)
         self.mesh = msh[0]
 
 class Bishop(Piece):
     def __init__(self, side):
+        super().__init__(side)
         self.mesh = msh[1]
 
 class Pawn(Piece):
     def __init__(self, side):
+        super().__init__(side)
         self.mesh = msh[2]
 
 class Queen(Piece):
     def __init__(self, side):
+        super().__init__(side)
         self.mesh = msh[3]
 
 class Rook(Piece):
     def __init__(self, side):
+        super().__init__(side)
         self.mesh = msh[4]
 
 class King(Piece):
     def __init__(self, side):
+        super().__init__(side)
         self.mesh = msh[5]

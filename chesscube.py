@@ -55,7 +55,7 @@ class ChessCube:
         # Initilise Cubelet Array
         self.cubelets = [[[] for i in range(0,size)]for i in range(0,size)]
         self.pieces = LoopCube(size)
-        self.pieces[0, size//2, size//2] = [0, Bishop(Piece.WHITE)]
+        self.pieces[0, size//2, size//2] = [0, Bishop(Piece.BLACK)]
 
         m = self.pieces.get_valid_moves(0, self.size//2, self.size//2)
         for mv in m:
@@ -133,7 +133,7 @@ class ChessCube:
                 if face[r][c][1] != None:
                     loc = addv(addv(offset, face_center),sclv(face_vect[face_num],self.offset))
 
-                    pr.draw_model_ex(face[r][c][1].mesh,loc, rots[face_num][0],rots[face_num][1],pr.Vector3(0.2, 0.2, 0.2),pr.WHITE)
+                    pr.draw_model_ex(face[r][c][1].mesh,loc, rots[face_num][0],rots[face_num][1],pr.Vector3(0.2, 0.2, 0.2),face[r][c][1].colour)
 
 
     def draw(self):

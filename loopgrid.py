@@ -220,13 +220,13 @@ class LoopCube:
 
             rots = []
 
-        if type(p) == Rook:
+        if type(p) in [Rook, Queen]:
             print("It's a rook!")
 
             rots = [0,0,0,0]
             blocked = [False for i in range(4)]
             poss = [[face,r,c] for i in range(4)]
-            for i in range(self.size*2):
+            for i in range(self.size):
                 tmprots = [0,0,0,0]
                 tmprots[0], poss[0] = self.move(poss[0], *self.rotate_v2d(-1, 0, True, rots[0]))
                 tmprots[1], poss[1] = self.move(poss[1], *self.rotate_v2d(1, 0, True, rots[1]))
@@ -249,14 +249,14 @@ class LoopCube:
                     if not blocked[i]: 
                         moves.append(poss[i])
 
-        if type(p) == Bishop:
+        if type(p) in [Bishop, Queen]:
             print("Bishop moment")
 
             rots = [0 for i in range(8)]
             poss = [[face,r,c] for i in range(8)]
             blocked = [False for i in range(8)]
 
-            for i in range(self.size*2):
+            for i in range(self.size):
                 tmprots = [0 for i in range(8)]
                 tmprots[0], poss[0] = self.move(poss[0], *self.rotate_v2d(0, -1, True, rots[0]))
                 tmprots[1], poss[1] = self.move(poss[1], *self.rotate_v2d(0, 1, True, rots[1]))

@@ -30,18 +30,43 @@ float Rectangle(in vec2 st, in float size, in float fill)
 
 void main()
 {
-    vec2 fragPos = fragTexCoord;
-    //fragPos.xy += uTime/9.0;
+  vec2 fragPos = fragTexCoord;
 
-    fragPos *= divisions;
-    vec2 ipos = floor(fragPos);  // Get the integer coords
-    vec2 fpos = fract(fragPos);  // Get the fractional coords
+	vec2 uv = 2.0*fragTexCoord.xy;
 
-    float alpha = Rectangle(fpos, 2, 1.0);
-    //vec3 color = vec3(fragPos.y, 1, 0);
+    // background	 
+	vec3 color = vec3(0.3 + 0.2*uv.y);
 
-    vec3 color = bott - topp;
-    color = (color*((fragPos.y/4))) + topp;
+    // bubbles	
+	for( int i=0; i<40; i++ )
+	{
+        // bubble seeds
+		float pha =      sin(float(i)*546.13+1.0)*0.5 + 0.5;
+		float siz = pow( sin(float(i)*651.74+5.0)*0.5 + 0.5, 4.0 );
+		float pox =      sin(float(i)*321.55+4.1);
 
-    finalColor = vec4(color, 1);
+        // buble size, position and color
+		float rad = 0.1 + 0.5*siz;
+		vec2  pos = vec2( pox, -rad + (2.0+2.0*rad)*mod(pha+0.1*uTime*(0.2+0.8*siz),1.0));
+    pos = pos * vec2(1,-1);
+    pos = pos + vec2(0,1);
+		float dis = length( uv - pos );
+		vec3  col = mix( vec3(0.0,0.0,0.0), vec3(0.1,0.4,0.8), 0.5+0.5*sin(float(i)*1.2+1.9));
+		//    col+= 8.0*smoothstep( rad*0.95, rad, dis );
+		
+        // render
+		float f = length(uv-pos)/rad;
+		f = sqrt(clamp(1.0-f*f,0.0,0.5));
+		color -= col.zyx *(1.0-smoothstep( rad*0.95, rad, dis )) * f;
+	}
+
+    // vigneting	
+	color *= sqrt(1.5-0.2*length(uv));
+
+  vec3 colour = bott - topp;
+  colour = (colour*((fragPos.y/4))) + topp;
+
+  color = color*0.3+colour;
+
+	finalColor = vec4(color,1.0);
 }

@@ -69,7 +69,7 @@ def main():
     while not pr.window_should_close():
         pr.set_shader_value(grad, timeLoc, pr.get_time(), pr.ShaderUniformDataType.SHADER_UNIFORM_FLOAT)
         if ani_state == -1:
-            if pr.is_key_down(pr.KEY_SPACE):
+            if pr.is_mouse_button_down(pr.MOUSE_LEFT_BUTTON):
                 ani_state = 0
 
         # Start up easing
@@ -146,6 +146,7 @@ def main():
                                     player_to_move = Piece.WHITE if player_to_move == Piece.BLACK else Piece.BLACK
             if pr.is_mouse_button_up(pr.MOUSE_LEFT_BUTTON):
                 dragging = 0
+
         pr.update_camera(camera)
         # Update lighting
 
@@ -172,10 +173,18 @@ def main():
 
         pr.end_mode_3d()
 
-        if player_to_move:
-            pr.draw_text("WHITE TO MOVE", 10,10,20, pr.DARKGRAY)
+        if ani_state < 1:
+            col = (250,250,250,int(255*animation))
+            pr.draw_text("CLICK TO START", 120,10,50, col)
+        elif ani_state == 1:
+            col = (250,250,250,int(255*(1-animation)))
+            pr.draw_text("WHITE TO MOVE", 10,10,20, col)
+        elif player_to_move:
+            col = (250,250,250,255)
+            pr.draw_text("WHITE TO MOVE", 10,10,20, col)
         else:
-            pr.draw_text("BLACK TO MOVE", 10,10,20, pr.DARKGRAY)
+            col = (250,250,250,255)
+            pr.draw_text("BLACK TO MOVE", 10,10,20, col)
         
         pr.end_texture_mode() # END TEXTURE
 

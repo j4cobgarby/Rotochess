@@ -13,6 +13,15 @@ rots = [
         [pr.Vector3(0,-1,1),180],
     ]
 
+face_vect = [
+    pr.Vector3(0,1,0),
+    pr.Vector3(0,-1,0),
+    pr.Vector3(-1,0,0),
+    pr.Vector3(1,0,0),
+    pr.Vector3(0,0,1),
+    pr.Vector3(0,0,-1),
+]
+
 def addv(v1, v2):
         return pr.Vector3(v1.x + v2.x, v1.y + v2.y, v1.z + v2.z)
 
@@ -23,9 +32,10 @@ def mulv(v1, v2):
     return pr.Vector3(v1.x * v2.x, v1.y * v2.y, v1.z * v2.z)
 
 class ChessCube:
-    def __init__(self,size,cubelet_size):
+    def __init__(self,size,cubelet_size,):
         self.size = size
         self.cubelet_size = cubelet_size
+        self.offset=-1.5
 
 
         # Initilise Cubelet Array
@@ -77,7 +87,9 @@ class ChessCube:
                 offset = addv(sclv(r_dir, r), sclv(c_dir, c))
                 pr.draw_cube(addv(offset, face_center), 0.8,0.1,0.8, cols[face[r][c][0]])
                 if face[r][c][1] != None:
-                    pr.draw_model_ex(face[r][c][1].mesh,addv(offset, face_center), rots[face_num][0],rots[face_num][1],pr.Vector3(0.2, 0.2, 0.2),pr.WHITE)
+                    loc = addv(addv(offset, face_center),sclv(face_vect[face_num],self.offset))
+                    pr.draw_model_ex(face[r][c][1].mesh,loc, rots[face_num][0],rots[face_num][1],pr.Vector3(0.2, 0.2, 0.2),pr.WHITE)
+
                 #pr.draw_cube(addv(face_center, pr.Vector3(r,0,c)), 0.8, 0.05, 0.8, pr.WHITE if face[r][c] == 1 else col)
 
     def draw_xy_face(self,face_num, face_center, r_dir, c_dir, size):
@@ -94,7 +106,9 @@ class ChessCube:
                 offset = addv(sclv(r_dir, r), sclv(c_dir, c))
                 pr.draw_cube(addv(offset, face_center), 0.8, 0.8, 0.1, cols[face[r][c][0]])
                 if face[r][c][1] != None:
-                    pr.draw_model_ex(face[r][c][1].mesh,addv(offset, face_center), rots[face_num][0],rots[face_num][1],pr.Vector3(0.2, 0.2, 0.2),pr.WHITE)
+                    loc = addv(addv(offset, face_center),sclv(face_vect[face_num],self.offset))
+                    pr.draw_model_ex(face[r][c][1].mesh,loc, rots[face_num][0],rots[face_num][1],pr.Vector3(0.2, 0.2, 0.2),pr.WHITE)
+
 
     def draw_zy_face(self,face_num, face_center, r_dir, c_dir, size):
         face = self.pieces[face_num]
@@ -110,7 +124,8 @@ class ChessCube:
                 offset = addv(sclv(r_dir, r), sclv(c_dir, c))
                 pr.draw_cube(addv(offset, face_center), 0.1, 0.8, 0.8, cols[face[r][c][0]])
                 if face[r][c][1] != None:
-                    pr.draw_model_ex(face[r][c][1].mesh,addv(offset, face_center), rots[face_num][0],rots[face_num][1],pr.Vector3(0.2, 0.2, 0.2),pr.WHITE)
+                    loc = addv(addv(offset, face_center),sclv(face_vect[face_num],self.offset))
+                    pr.draw_model_ex(face[r][c][1].mesh,loc, rots[face_num][0],rots[face_num][1],pr.Vector3(0.2, 0.2, 0.2),pr.WHITE)
 
 
     def draw(self):

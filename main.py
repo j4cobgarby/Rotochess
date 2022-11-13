@@ -22,7 +22,7 @@ def main():
 
     world = ChessCube(size,cubelet_size)
 
-    camera = pr.Camera3D([18.0, 16.0, 18.0], [0.0, 0.0, 0.0], [0.0, 1.0, 0.0], 45.0, 0)
+    camera = pr.Camera3D([18.0, world.size*3+16, 18.0], [0.0, world.size*3, 0.0], [0.0, 1.0, 0.0], 45.0, 0)
     camera.projection = pr.CameraProjection.CAMERA_ORTHOGRAPHIC
     pr.set_camera_mode(camera, pr.CAMERA_FREE)
     pr.set_camera_alt_control(pr.KEY_LEFT_SHIFT)
@@ -44,14 +44,45 @@ def main():
 
     camera.fovy = world.size*1.87+2
 
-    while not pr.window_should_close():
+    animation = 1
+    ani_state = -1
+    running = False
 
-        if pr.is_key_down(pr.KEY_W):
-            world.rotate_x(random.randrange(world.size))
-        if pr.is_key_down(pr.KEY_S):
-            world.rotate_y(random.randrange(world.size))
-        if pr.is_key_down(pr.KEY_D):
-            world.rotate_z(random.randrange(world.size))
+
+    while not pr.window_should_close():
+        if ani_state == -1:
+            if pr.is_key_down(pr.KEY_SPACE):
+                ani_state = 0
+
+        # Start up easing
+        if ani_state == 0:
+            animation = animation * 0.95
+            camera.position.y = 16 + world.size*animation*3
+            camera.target.y = world.size*animation*3
+
+            if animation <= 0.001:
+                ani_state = 1
+                camera.position.y = 16
+                camera.target.y = 0
+                animation = 1
+
+        if ani_state == 1:
+            animation = animation * 0.97
+            world.offset = world.size*animation*3 +0.04
+            if animation <= 0.001:
+                ani_state = 2
+                running = True
+                world.offset = 0.04
+
+        if running:
+            #world.offset = max(world.offset -0.1,0)
+
+            if pr.is_key_down(pr.KEY_W):
+                world.rotate_x(random.randrange(world.size))
+            if pr.is_key_down(pr.KEY_S):
+                world.rotate_y(random.randrange(world.size))
+            if pr.is_key_down(pr.KEY_D):
+                world.rotate_z(random.randrange(world.size))
 
         pr.update_camera(camera)
 
@@ -77,7 +108,6 @@ def main():
         world.draw()
 
         pr.end_mode_3d()
-
         pr.end_texture_mode() # END TEXTURE
 
         # Post Processing Shader

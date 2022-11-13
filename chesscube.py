@@ -2,7 +2,7 @@ import pyray as pr
 from loopgrid import LoopCube
 from piece import *
 
-cols = [pr.RED,pr.ORANGE,pr.DARKGREEN,pr.YELLOW,pr.PURPLE,pr.BLUE,pr.WHITE]
+cols = [pr.WHITE,pr.YELLOW,pr.ORANGE,pr.RED,pr.DARKGREEN,pr.BLUE,pr.WHITE]
 
 cube = pr.load_model("Mesh/cube.obj")
 
@@ -123,8 +123,7 @@ class ChessCube:
                 ra = pr.get_ray_collision_box(self.ray, pr.BoundingBox(bl, tr)) 
                 co = cols[face[r][c][0]]
                 if (face_num, r,c) in valid_moves:
-                    print("ASDASDASD")
-                    co = pr.LIGHTGRAY
+                    co = pr.PURPLE
 
                 if ra.hit:
                     if ra.distance < self.mousedist:

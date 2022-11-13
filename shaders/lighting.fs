@@ -21,6 +21,6 @@ uniform vec3 viewPos;
 void main()
 {
     // Gamma correction
-    finalColor = colDiffuse*clamp(dot(vec3(1,1,0),fragNormal),0.3,1);//pow(finalColor, vec4(1.0/2.2));
+    finalColor = colDiffuse*clamp(dot(vec3(1,1,0),fragNormal),0.4,1);//pow(finalColor, vec4(1.0/2.2));
     finalColor.w = 1;
 }

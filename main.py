@@ -48,6 +48,8 @@ def main():
     ani_state = -1
     running = False
 
+    making_move = False
+    piece_to_move = None
     dragging = 0
 
     rot_table = [
@@ -99,6 +101,20 @@ def main():
                 world.rotate_z(random.randrange(world.size))
 
             if pr.is_mouse_button_down(pr.MOUSE_LEFT_BUTTON):
+                if making_move:
+                    if world.mouse in world.pieces.get_valid_moves(*piece_to_move):
+                        print("Good")
+                        making_move = False
+                        world.pieces[world.mouse][1] = world.pieces[piece_to_move][1]
+                        world.pieces[piece_to_move][1] = None
+                    else:
+                        print("Bad")
+                else:
+                    if world.pieces[world.mouse][1] != None:
+                        making_move = True
+                        piece_to_move = world.mouse
+                        print("Ready to move")
+                        
                 if dragging == 0:
                     print("Click")
                     dragging = 1

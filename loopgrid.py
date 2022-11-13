@@ -215,6 +215,11 @@ class LoopCube:
         p = self.faces[face][r][c][1]
         moves = []
 
+        if type(p) == Knight:
+            print("Neigh!!")
+
+            rots = []
+
         if type(p) == Rook:
             print("It's a rook!")
 

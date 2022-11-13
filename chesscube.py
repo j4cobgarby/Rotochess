@@ -4,6 +4,8 @@ from piece import *
 
 cols = [pr.RED,pr.ORANGE,pr.GREEN,pr.YELLOW,pr.PURPLE,pr.BLUE,pr.WHITE]
 
+cube = pr.load_model("Mesh/cube.obj")
+
 rots = [
         [pr.Vector3(1,0,0),0],
         [pr.Vector3(1,0,0),180],
@@ -22,6 +24,15 @@ face_vect = [
     pr.Vector3(0,0,-1),
 ]
 
+face_sizes = [
+    pr.Vector3(0.8,0.1,0.8),
+    pr.Vector3(0.8,0.1,0.8),
+    pr.Vector3(0.1, 0.8, 0.8),
+    pr.Vector3(0.1, 0.8, 0.8),
+    pr.Vector3(0.8, 0.8, 0.1),
+    pr.Vector3(0.8, 0.8, 0.1)
+]
+
 def addv(v1, v2):
         return pr.Vector3(v1.x + v2.x, v1.y + v2.y, v1.z + v2.z)
 
@@ -32,10 +43,13 @@ def mulv(v1, v2):
     return pr.Vector3(v1.x * v2.x, v1.y * v2.y, v1.z * v2.z)
 
 class ChessCube:
-    def __init__(self,size,cubelet_size,):
+    def __init__(self,size,cubelet_size):
         self.size = size
         self.cubelet_size = cubelet_size
         self.offset=-1.5
+        self.ray = None
+        self.mouse = (0,0,0)
+        self.mousedist = 100000
 
 
         # Initilise Cubelet Array
@@ -73,26 +87,7 @@ class ChessCube:
     # U | D | L | R | F | B 
     # 0 | 1 | 2 | 3 | 4 | 5
 
-    def draw_xz_face(self,face_num, face_center, r_dir, c_dir, size):
-        face = self.pieces[face_num]
-        dirsum = addv(r_dir, c_dir)
-        offs = sclv(dirsum, -0.5)
-        dirsum = sclv(dirsum, size/2)
-        dirsum = addv(dirsum, offs)
-        dirsum = sclv(dirsum, -1)
-        face_center = addv(face_center, dirsum)
-
-        for r in range(size):
-            for c in range(size):
-                offset = addv(sclv(r_dir, r), sclv(c_dir, c))
-                pr.draw_cube(addv(offset, face_center), 0.8,0.1,0.8, cols[face[r][c][0]])
-                if face[r][c][1] != None:
-                    loc = addv(addv(offset, face_center),sclv(face_vect[face_num],self.offset))
-                    pr.draw_model_ex(face[r][c][1].mesh,loc, rots[face_num][0],rots[face_num][1],pr.Vector3(0.2, 0.2, 0.2),pr.WHITE)
-
-                #pr.draw_cube(addv(face_center, pr.Vector3(r,0,c)), 0.8, 0.05, 0.8, pr.WHITE if face[r][c] == 1 else col)
-
-    def draw_xy_face(self,face_num, face_center, r_dir, c_dir, size):
+    def draw_face(self,face_num, face_center, r_dir, c_dir, size):
         face = self.pieces[face_num]
         dirsum = addv(r_dir, c_dir)
         offs = sclv(dirsum, -0.5)
@@ -104,42 +99,44 @@ class ChessCube:
         for r in range(size):
             for c in range(size):
                 offset = addv(sclv(r_dir, r), sclv(c_dir, c))
-                pr.draw_cube(addv(offset, face_center), 0.8, 0.8, 0.1, cols[face[r][c][0]])
+
+                #pr.draw_cube(addv(offset, face_center), *face_sizes[face_num], cols[face[r][c][0]])
+                #pr.draw_model_ex(cube, addv(offset, face_center), rots[face_num][0],rots[face_num][1],face_sizes[0],cols[face_num])
+
+                tr = addv(addv(offset, face_center),sclv(face_sizes[face_num], 0.5))
+                bl = addv(addv(offset, face_center),sclv(face_sizes[face_num], -0.5))
+
+                ra = pr.get_ray_collision_box(self.ray, pr.BoundingBox(bl, tr)) 
+                if ra.hit:
+                    if ra.distance < self.mousedist:
+                        self.mouse = (face_num,r,c)
+                        self.mousedist = ra.distance
+                        co = pr.GREEN
+                    else:
+                        co = pr.WHITE
+                else:
+                    co = pr.WHITE
+
+                pr.draw_model_ex(cube, addv(offset, face_center), rots[face_num][0],rots[face_num][1],face_sizes[0],co)
+
                 if face[r][c][1] != None:
                     loc = addv(addv(offset, face_center),sclv(face_vect[face_num],self.offset))
-                    pr.draw_model_ex(face[r][c][1].mesh,loc, rots[face_num][0],rots[face_num][1],pr.Vector3(0.2, 0.2, 0.2),pr.WHITE)
 
-
-    def draw_zy_face(self,face_num, face_center, r_dir, c_dir, size):
-        face = self.pieces[face_num]
-        dirsum = addv(r_dir, c_dir)
-        offs = sclv(dirsum, -0.5)
-        dirsum = sclv(dirsum, size/2)
-        dirsum = addv(dirsum, offs)
-        dirsum = sclv(dirsum, -1)
-        face_center = addv(face_center, dirsum) # Face center is now the point where r=0, c=0
-
-        for r in range(size):
-            for c in range(size):
-                offset = addv(sclv(r_dir, r), sclv(c_dir, c))
-                pr.draw_cube(addv(offset, face_center), 0.1, 0.8, 0.8, cols[face[r][c][0]])
-                if face[r][c][1] != None:
-                    loc = addv(addv(offset, face_center),sclv(face_vect[face_num],self.offset))
                     pr.draw_model_ex(face[r][c][1].mesh,loc, rots[face_num][0],rots[face_num][1],pr.Vector3(0.2, 0.2, 0.2),pr.WHITE)
 
 
     def draw(self):
         sz = self.size
-        pr.draw_cube(pr.Vector3(0,0,0), sz,sz,sz, pr.DARKGRAY)
+        pr.draw_model(cube,pr.Vector3(0,0,0),self.size,pr.DARKGRAY)
 
-        self.draw_xz_face(0, pr.Vector3(0,sz/2,0), pr.Vector3(0,0,1), pr.Vector3(1,0,0), sz)
-        self.draw_xz_face(1, pr.Vector3(0,-sz/2,0), pr.Vector3(0,0,1), pr.Vector3(-1,0,0), sz)
+        self.draw_face(0, pr.Vector3(0,sz/2,0), pr.Vector3(0,0,1), pr.Vector3(1,0,0), sz)
+        self.draw_face(1, pr.Vector3(0,-sz/2,0), pr.Vector3(0,0,1), pr.Vector3(-1,0,0), sz)
 
-        self.draw_xy_face(4, pr.Vector3(0,0,sz/2), pr.Vector3(-1,0,0), pr.Vector3(0,-1,0), sz)
-        self.draw_xy_face(5, pr.Vector3(0,0,-sz/2), pr.Vector3(1,0,0), pr.Vector3(0,-1,0), sz)
+        self.draw_face(4, pr.Vector3(0,0,sz/2), pr.Vector3(-1,0,0), pr.Vector3(0,-1,0), sz)
+        self.draw_face(5, pr.Vector3(0,0,-sz/2), pr.Vector3(1,0,0), pr.Vector3(0,-1,0), sz)
 
-        self.draw_zy_face(2, pr.Vector3(-sz/2,0,0), pr.Vector3(0,0,1), pr.Vector3(0,1,0), sz)
-        self.draw_zy_face(3, pr.Vector3(sz/2,0,0), pr.Vector3(0,0,1), pr.Vector3(0,-1,0), sz)
+        self.draw_face(2, pr.Vector3(-sz/2,0,0), pr.Vector3(0,0,1), pr.Vector3(0,1,0), sz)
+        self.draw_face(3, pr.Vector3(sz/2,0,0), pr.Vector3(0,0,1), pr.Vector3(0,-1,0), sz)
 
     def rotate_x(self,n):
         hold = [None]*self.size

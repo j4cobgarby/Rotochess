@@ -49,7 +49,9 @@ def main():
     running = False
 
 
+
     while not pr.window_should_close():
+        
         if ani_state == -1:
             if pr.is_key_down(pr.KEY_SPACE):
                 ani_state = 0
@@ -70,9 +72,10 @@ def main():
             animation = animation * 0.97
             world.offset = world.size*animation*3 +0.04
             if animation <= 0.001:
+                print("AHHHHHHHh")
                 ani_state = 2
                 running = True
-                world.offset = 0.04
+                world.offset = 0.05
 
         if running:
             #world.offset = max(world.offset -0.1,0)
@@ -84,8 +87,10 @@ def main():
             if pr.is_key_down(pr.KEY_D):
                 world.rotate_z(random.randrange(world.size))
 
-        pr.update_camera(camera)
+            if pr.is_key_down(pr.MOUSE_LEFT_BUTTON):
+                pass
 
+        pr.update_camera(camera)
         # Update lighting
 
         camPos = [camera.position.x, camera.position.y, camera.position.y]
@@ -105,7 +110,9 @@ def main():
 
         pr.begin_mode_3d(camera)
         
+        world.ray = pr.get_mouse_ray(pr.get_mouse_position(), camera)
         world.draw()
+        world.mousedist = 1000
 
         pr.end_mode_3d()
         pr.end_texture_mode() # END TEXTURE

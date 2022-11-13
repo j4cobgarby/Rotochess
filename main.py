@@ -171,6 +171,12 @@ def main():
         world.mousedist = 1000
 
         pr.end_mode_3d()
+
+        if player_to_move:
+            pr.draw_text("WHITE TO MOVE", 10,10,20, pr.DARKGRAY)
+        else:
+            pr.draw_text("BLACK TO MOVE", 10,10,20, pr.DARKGRAY)
+        
         pr.end_texture_mode() # END TEXTURE
 
         # Post Processing Shader

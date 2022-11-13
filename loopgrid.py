@@ -225,7 +225,7 @@ class LoopCube:
 
             rots = [0,0,0,0]
             poss = [[face,r,c] for i in range(4)]
-            for i in range(self.size):
+            for i in range(self.size*2):
                 tmprots = [0,0,0,0]
                 tmprots[0], poss[0] = self.move(poss[0], *self.rotate_v2d(-1, 0, True, rots[0]))
                 tmprots[1], poss[1] = self.move(poss[1], *self.rotate_v2d(1, 0, True, rots[1]))
@@ -240,7 +240,7 @@ class LoopCube:
 
             rots = [0 for i in range(8)]
             poss = [[face,r,c] for i in range(8)]
-            for i in range(self.size):
+            for i in range(self.size*2):
                 tmprots = [0 for i in range(8)]
                 tmprots[0], poss[0] = self.move(poss[0], *self.rotate_v2d(0, -1, True, rots[0]))
                 tmprots[1], poss[1] = self.move(poss[1], *self.rotate_v2d(0, 1, True, rots[1]))

@@ -103,13 +103,11 @@ def main():
         pr.draw_texture(bg_texture, 0, 0, pr.WHITE)
         pr.end_shader_mode()
 
-        pr.begin_shader_mode(transform)
         pr.begin_mode_3d(camera)
         
         world.draw()
 
         pr.end_mode_3d()
-        pr.end_shader_mode(transform)
         pr.end_texture_mode() # END TEXTURE
 
         # Post Processing Shader

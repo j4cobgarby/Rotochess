@@ -127,7 +127,7 @@ class ChessCube:
                     else:
                         co = cols[face[r][c][0]]
                 elif [face, r,c] in valid_moves:
-                    co = cols[pr.BEIGE]
+                    co = pr.BEIGE
                 else:
                     co = cols[face[r][c][0]]
 

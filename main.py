@@ -48,7 +48,8 @@ def main():
     ani_state = -1
     running = False
 
-
+    making_move = False
+    piece_to_move = None
 
     while not pr.window_should_close():
         
@@ -87,8 +88,20 @@ def main():
             if pr.is_key_down(pr.KEY_D):
                 world.rotate_z(random.randrange(world.size))
 
-            if pr.is_key_down(pr.MOUSE_LEFT_BUTTON):
-                pass
+            if pr.is_mouse_button_pressed(pr.MOUSE_LEFT_BUTTON):
+                if making_move:
+                    if world.mouse in world.pieces.get_valid_moves(*piece_to_move):
+                        print("Good")
+                        making_move = False
+                        world.pieces[world.mouse][1] = world.pieces[piece_to_move][1]
+                        world.pieces[piece_to_move][1] = None
+                    else:
+                        print("Bad")
+                else:
+                    if world.pieces[world.mouse][1] != None:
+                        making_move = True
+                        piece_to_move = world.mouse
+                        print("Ready to move")
 
         pr.update_camera(camera)
         # Update lighting

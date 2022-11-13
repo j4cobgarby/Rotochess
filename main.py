@@ -24,7 +24,7 @@ def main():
 
     camera = pr.Camera3D([18.0, 16.0, 18.0], [0.0, 0.0, 0.0], [0.0, 1.0, 0.0], 45.0, 0)
     camera.projection = pr.CameraProjection.CAMERA_ORTHOGRAPHIC
-    pr.set_camera_mode(camera, pr.CAMERA_ORBITAL)
+    pr.set_camera_mode(camera, pr.CAMERA_FREE)
     pr.set_camera_alt_control(pr.KEY_LEFT_SHIFT)
 
     # Shaders
@@ -45,6 +45,7 @@ def main():
     camera.fovy = world.size*1.87+2
 
     while not pr.window_should_close():
+
         if pr.is_key_down(pr.KEY_W):
             world.rotate_x(random.randrange(world.size))
         if pr.is_key_down(pr.KEY_S):
@@ -53,6 +54,11 @@ def main():
             world.rotate_z(random.randrange(world.size))
 
         pr.update_camera(camera)
+
+        # Update lighting
+
+        camPos = [camera.position.x, camera.position.y, camera.position.y]
+        #pr.set_shader_value(lighting, lighting.locs[pr.ShaderLocationIndex.SHADER_LOC_VECTOR_VIEW], camPos, pr.ShaderUniformDataType.SHADER_UNIFORM_VEC3)
 
         # Render Cube
         pr.begin_texture_mode(target) # START TEXTURE

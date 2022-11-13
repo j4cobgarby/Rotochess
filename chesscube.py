@@ -57,10 +57,20 @@ class ChessCube:
         # Initilise Cubelet Array
         self.cubelets = [[[] for i in range(0,size)]for i in range(0,size)]
         self.pieces = LoopCube(size)
-        self.pieces[0, 1, 1] = [0, Rook(Piece.WHITE)]
-        self.pieces[0, size//2, size//2] = [0, Bishop(Piece.BLACK)]
-        self.pieces[4, size//2, size//2] = [4, Bishop(Piece.WHITE)]
-        self.pieces[1,0,0] = [1, Queen(Piece.BLACK)]
+
+        self.pieces[0,2,3] = [0, Rook(Piece.WHITE)]
+        self.pieces[0,3,3] = [0, Queen(Piece.WHITE)]
+        self.pieces[0,4,3] = [0, King(Piece.WHITE)]
+        self.pieces[0,5,3] = [0, Rook(Piece.WHITE)]
+        self.pieces[0,3,2] = [0, Bishop(Piece.WHITE)]
+        self.pieces[0,3,4] = [0, Bishop(Piece.WHITE)]
+
+        self.pieces[1,2,3] = [1, Rook(Piece.BLACK)]
+        self.pieces[1,3,3] = [1, Queen(Piece.BLACK)]
+        self.pieces[1,4,3] = [1, King(Piece.BLACK)]
+        self.pieces[1,5,3] = [1, Rook(Piece.BLACK)]
+        self.pieces[1,3,2] = [1, Bishop(Piece.BLACK)]
+        self.pieces[1,3,4] = [1, Bishop(Piece.BLACK)]
     
     def spin(self,sides,n):
         if sides[3]:

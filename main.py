@@ -5,7 +5,7 @@ import random
 import time as t
 
 def main():
-    size = 2
+    size = 7
     cubelet_size = 2
     pr.set_config_flags(pr.ConfigFlags.FLAG_MSAA_4X_HINT)
     pr.set_config_flags(pr.ConfigFlags.FLAG_VSYNC_HINT)

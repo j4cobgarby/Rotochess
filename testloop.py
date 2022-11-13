@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import pyray as pr
-from loopgrid import LoopCube
+
 
 def addv(v1, v2):
     return pr.Vector3(v1.x + v2.x, v1.y + v2.y, v1.z + v2.z)
@@ -65,6 +65,7 @@ def main():
     pr.set_config_flags(pr.ConfigFlags.FLAG_VSYNC_HINT)
 
     pr.init_window(700, 700, "Rotochess")
+    from loopgrid import LoopCube
     pr.set_target_fps(60)
 
     camera = pr.Camera3D([18.0, 18.0, 18.0], [0.0, 0.0, 0.0], [0.0, 1.0, 0.0], 45.0, 0)
@@ -72,7 +73,7 @@ def main():
     pr.set_camera_mode(camera, pr.CAMERA_FREE)
     pr.set_camera_alt_control(pr.KEY_LEFT_SHIFT)
 
-    sz = 3
+    sz = 5
 
     lc = LoopCube(sz);
     pos = (0,sz-1,1)

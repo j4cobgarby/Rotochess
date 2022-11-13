@@ -24,7 +24,6 @@ def draw_xz_face(face, face_center, r_dir, c_dir, size, col):
         for c in range(size):
             offset = addv(sclv(r_dir, r), sclv(c_dir, c))
             pr.draw_cube(addv(offset, face_center), 0.8,0.1,0.8, pr.WHITE if face[r][c] == 1 else col)
-            #pr.draw_cube(addv(face_center, pr.Vector3(r,0,c)), 0.8, 0.05, 0.8, pr.WHITE if face[r][c] == 1 else col)
 
 def draw_xy_face(face, face_center, r_dir, c_dir, size, col):
     dirsum = addv(r_dir, c_dir)
@@ -52,6 +51,15 @@ def draw_zy_face(face, face_center, r_dir, c_dir, size, col):
             offset = addv(sclv(r_dir, r), sclv(c_dir, c))
             pr.draw_cube(addv(offset, face_center), 0.1, 0.8, 0.8, pr.WHITE if face[r][c] == 1 else col)
 
+def rotate_v2d(x, y, cw, steps):
+    ret = [x, y]
+    for i in range(steps):
+        if (cw):
+            ret[0], ret[1] = ret[1], -ret[0]
+        else:
+            ret[0], ret[1] = -ret[1], ret[0]
+    return ret
+
 def main():
     pr.set_config_flags(pr.ConfigFlags.FLAG_MSAA_4X_HINT)
     pr.set_config_flags(pr.ConfigFlags.FLAG_VSYNC_HINT)
@@ -59,7 +67,7 @@ def main():
     pr.init_window(700, 700, "Rotochess")
     pr.set_target_fps(60)
 
-    camera = pr.Camera3D([18.0, 16.0, 18.0], [0.0, 0.0, 0.0], [0.0, 1.0, 0.0], 45.0, 0)
+    camera = pr.Camera3D([18.0, 18.0, 18.0], [0.0, 0.0, 0.0], [0.0, 1.0, 0.0], 45.0, 0)
     camera.projection = pr.CameraProjection.CAMERA_PERSPECTIVE
     pr.set_camera_mode(camera, pr.CAMERA_FREE)
     pr.set_camera_alt_control(pr.KEY_LEFT_SHIFT)
@@ -68,30 +76,35 @@ def main():
 
     lc = LoopCube(sz);
     pos = (0,sz-1,1)
+    rotation = 0 # clockwise rotation (in amount of 90 degrees)
+    
     lc[pos] = 1
-    print(lc)
 
     while not pr.window_should_close():
         if pr.is_key_pressed(pr.KeyboardKey.KEY_UP):
             lc[pos] = 0
-            pos = lc.move_negrow(pos)
+            r, pos = lc.move(pos, *rotate_v2d(-1, 0, True, rotation))
+            rotation += r
+            print(rotation)
             lc[pos] = 1
-            print(lc)
         if pr.is_key_pressed(pr.KeyboardKey.KEY_DOWN):
             lc[pos] = 0
-            pos = lc.move_posrow(pos)
+            r, pos = lc.move(pos, *rotate_v2d(1, 0, True, rotation))
+            rotation += r
+            print(rotation)
             lc[pos] = 1
-            print(lc)
         if pr.is_key_pressed(pr.KeyboardKey.KEY_LEFT):
             lc[pos] = 0
-            pos = lc.move_negcol(pos)
+            r, pos = lc.move(pos, *rotate_v2d(0, -1, True, rotation))
+            rotation += r
+            print(rotation)
             lc[pos] = 1
-            print(lc)
         if pr.is_key_pressed(pr.KeyboardKey.KEY_RIGHT):
             lc[pos] = 0
-            pos = lc.move_poscol(pos)
+            r, pos = lc.move(pos, *rotate_v2d(0, 1, True, rotation))
+            rotation += r
+            print(rotation)
             lc[pos] = 1
-            print(lc)
 
         pr.update_camera(camera)
         pr.begin_drawing()

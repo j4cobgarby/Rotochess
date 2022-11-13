@@ -5,6 +5,68 @@ class LoopCube:
         self.size = size
         self.faces = [[[0 for col in range(self.size)] for row in range(self.size)] for face in range(6)]
 
+    # Just converts a delta_r and delta_c to a move_* call
+    # only one of delta_r and delta_c should be set, and to 1 or -1
+    def move_helper(self, index, delta_r, delta_c):
+        if delta_r == 1:
+            return self.move_posrow(index)
+        elif delta_r == -1:
+            return self.move_negrow(index)
+        elif delta_c == 1:
+            return self.move_poscol(index)
+        elif delta_c == -1:
+            return self.move_negcol(index)
+
+    # Move in one direction, one square
+    # Returns (r, (new_face, new_row, new_col))
+    # r is the amount of 90 degree turns to rotate by
+    def move(self, index, delta_r, delta_c):
+        start = index[::]
+        target = self.move_helper(start, delta_r, delta_c)
+
+        # Hasn't moved over an edge
+        if start[0] == target[0]:
+            return (0, target)
+
+        if target[0] == 4:
+            # Here we're moving to front face, which is a problem
+            # because it's like a crossroads
+            if start[0] == 0:
+                return (3, target) # we're not moving right along F
+            if start[0] == 1:
+                return (1, target) # from D to F, into the side
+            if start[0] == 2:
+                return (2, target) # coming in from right below
+
+        if target[0] == 0:
+            if start[0] == 4:
+                return (1, target)
+            if start[0] == 5:
+                return (3, target)
+        
+        if target[0] == 1:
+            if start[0] == 4:
+                return (3, target)
+            if start[0] == 5:
+                return (1, target)
+
+        if target[0] == 2:
+            if start[0] == 4:
+                return (2, target)
+            if start[0] == 5:
+                return (2, target)
+
+        if target[0] == 5:
+            if start[0] == 0:
+                return (1, target)
+            if start[0] == 1:
+                return (3, target)
+            if start[0] == 2:
+                return (2, target)
+
+        return (0, target)
+
+
     def move_posrow(self, index):
         if index[1] + 1 >= self.size:
             new_face = None
@@ -34,7 +96,7 @@ class LoopCube:
                 new_col = self.size - 1 - index[2]
             elif index[0] == 5:
                 new_face = 3
-                new_row = self.size - 1
+                new_row = 0
                 new_col = index[2]
             return (new_face, new_row, new_col)
         else:

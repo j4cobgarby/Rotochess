@@ -1,9 +1,11 @@
 from random import randint
+import piece
+import random
 
 class LoopCube:
     def __init__(self, size):
         self.size = size
-        self.faces = [[[0 for col in range(self.size)] for row in range(self.size)] for face in range(6)]
+        self.faces = [[[[face,piece.Piece()] for col in range(self.size)] for row in range(self.size)] for face in range(6)]
 
     # Just converts a delta_r and delta_c to a move_* call
     # only one of delta_r and delta_c should be set, and to 1 or -1

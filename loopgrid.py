@@ -224,6 +224,7 @@ class LoopCube:
             print("It's a rook!")
 
             rots = [0,0,0,0]
+            blocked = [False for i in range(4)]
             poss = [[face,r,c] for i in range(4)]
             for i in range(self.size*2):
                 tmprots = [0,0,0,0]
@@ -233,13 +234,28 @@ class LoopCube:
                 tmprots[3], poss[3] = self.move(poss[3], *self.rotate_v2d(0, -1, True, rots[3]))
                 for i in range(4):
                     rots[i] += tmprots[i]
-                    moves.append(poss[i])
+                    f = self.faces[poss[i][0]][poss[i][1]][poss[i][2]]
+                    if f[1] != None:
+                        if f[1].side == self.faces[face][r][c][1].side:
+                            # encountered my own side
+                            blocked[i] = True
+                            continue
+                        else:
+                            #encounterd enemy
+                            blocked[i] = True
+                            moves.append(poss[i])
+                            continue
+
+                    if not blocked[i]: 
+                        moves.append(poss[i])
 
         if type(p) == Bishop:
             print("Bishop moment")
 
             rots = [0 for i in range(8)]
             poss = [[face,r,c] for i in range(8)]
+            blocked = [False for i in range(8)]
+
             for i in range(self.size*2):
                 tmprots = [0 for i in range(8)]
                 tmprots[0], poss[0] = self.move(poss[0], *self.rotate_v2d(0, -1, True, rots[0]))
@@ -260,9 +276,21 @@ class LoopCube:
                 tmprots[5], poss[5] = self.move(poss[5], *self.rotate_v2d(1, 0, True, rots[5]))
                 tmprots[6], poss[6] = self.move(poss[6], *self.rotate_v2d(0, -1, True, rots[6]))
                 tmprots[7], poss[7] = self.move(poss[7], *self.rotate_v2d(0, -1, True, rots[7]))
+
                 for i in range(8):
                     rots[i] += tmprots[i]
-                    moves.append(poss[i])
+                    f = self.faces[poss[i][0]][poss[i][1]][poss[i][2]]
+                    if f[1] != None:
+                        if f[1].side == self.faces[face][r][c][1].side:
+                            blocked[i] = True
+                            continue
+                        else:
+                            blocked[i] = True
+                            moves.append(poss[i])
+                            continue
+                            
+                    if not blocked[i]:
+                        moves.append(poss[i])
 
         if type(p) == King:
             print("King!")

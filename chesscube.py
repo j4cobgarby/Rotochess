@@ -59,6 +59,7 @@ class ChessCube:
         self.pieces = LoopCube(size)
         self.pieces[0, 1, 1] = [0, Rook(Piece.WHITE)]
         self.pieces[0, size//2, size//2] = [0, Bishop(Piece.BLACK)]
+        self.pieces[4, size//2, size//2] = [4, Bishop(Piece.WHITE)]
     
     def spin(self,sides,n):
         if sides[3]:

@@ -103,8 +103,10 @@ def main():
             if pr.is_key_down(pr.KEY_D):
                 world.rotate_z(random.randrange(world.size))
 
-            if pr.is_mouse_button_down(pr.MOUSE_LEFT_BUTTON):
+            if pr.is_mouse_button_pressed(pr.MOUSE_LEFT_BUTTON):
                 if world.making_move:
+                    if world.mouse == world.to_move:
+                        world.making_move = False
                     if world.mouse in world.pieces.get_valid_moves(*world.to_move):
                         print("Good")
                         world.making_move = False
@@ -118,28 +120,30 @@ def main():
                         world.making_move = True
                         world.to_move = world.mouse
                         print("Ready to move")
-                   
-                if dragging == 0:
-                    print("Click")
-                    dragging = 1
-                    last_mouse = world.mouse
-                if dragging == 1:
-                    if last_mouse != world.mouse:
-                        dragging = 2
-                        print("Going")
-                        
-                        if last_mouse[0] == world.mouse[0]:
-                            has_turned = False
-                            if last_mouse[1] == world.mouse[1] +1:
-                                world.spin(rot_table[last_mouse[0]][0],last_mouse[2]); has_turned = True
-                            if last_mouse[1] == world.mouse[1] -1:
-                                world.spin(rot_table[last_mouse[0]][1],last_mouse[2]); has_turned = True
-                            if last_mouse[2] == world.mouse[2] +1:
-                                world.spin(rot_table[last_mouse[0]][2],last_mouse[1]); has_turned = True
-                            if last_mouse[2] == world.mouse[2] -1:
-                                world.spin(rot_table[last_mouse[0]][3],last_mouse[1]); has_turned = True
-                            if has_turned:
-                                player_to_move = Piece.WHITE if player_to_move == Piece.BLACK else Piece.BLACK
+
+            elif pr.is_mouse_button_down(pr.MOUSE_LEFT_BUTTON):
+                if not world.making_move:
+                    if dragging == 0:
+                        print("Click")
+                        dragging = 1
+                        last_mouse = world.mouse
+                    if dragging == 1:
+                        if last_mouse != world.mouse:
+                            dragging = 2
+                            print("Going")
+                            
+                            if last_mouse[0] == world.mouse[0]:
+                                has_turned = False
+                                if last_mouse[1] == world.mouse[1] +1:
+                                    world.spin(rot_table[last_mouse[0]][0],last_mouse[2]); has_turned = True
+                                if last_mouse[1] == world.mouse[1] -1:
+                                    world.spin(rot_table[last_mouse[0]][1],last_mouse[2]); has_turned = True
+                                if last_mouse[2] == world.mouse[2] +1:
+                                    world.spin(rot_table[last_mouse[0]][2],last_mouse[1]); has_turned = True
+                                if last_mouse[2] == world.mouse[2] -1:
+                                    world.spin(rot_table[last_mouse[0]][3],last_mouse[1]); has_turned = True
+                                if has_turned:
+                                    player_to_move = Piece.WHITE if player_to_move == Piece.BLACK else Piece.BLACK
             if pr.is_mouse_button_up(pr.MOUSE_LEFT_BUTTON):
                 dragging = 0
         pr.update_camera(camera)

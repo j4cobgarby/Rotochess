@@ -1,11 +1,11 @@
 from random import randint
-import piece
+from piece import *
 import random
 
 class LoopCube:
     def __init__(self, size):
         self.size = size
-        self.faces = [[[[face,piece.Piece()] for col in range(self.size)] for row in range(self.size)] for face in range(6)]
+        self.faces = [[[[face, None] for col in range(self.size)] for row in range(self.size)] for face in range(6)]
 
     # Just converts a delta_r and delta_c to a move_* call
     # only one of delta_r and delta_c should be set, and to 1 or -1
@@ -68,7 +68,6 @@ class LoopCube:
 
         return (0, target)
 
-
     def move_posrow(self, index):
         if index[1] + 1 >= self.size:
             new_face = None
@@ -105,7 +104,6 @@ class LoopCube:
             return (index[0], index[1] + 1, index[2])
 
     def move_negrow(self, index):
-        print(f"!! {index}, size={self.size}")
         if index[1] - 1 < 0:
             new_face = None
             new_row = None
@@ -203,6 +201,90 @@ class LoopCube:
             return (new_face, new_row, new_col)
         else:
             return (index[0], index[1], index[2] - 1)
+
+    def rotate_v2d(self, x, y, cw, steps):
+        ret = [x, y]
+        for i in range(steps):
+            if (cw):
+                ret[0], ret[1] = ret[1], -ret[0]
+            else:
+                ret[0], ret[1] = -ret[1], ret[0]
+        return ret
+
+    def get_valid_moves(self, face, r, c):
+        p = self.faces[face][r][c][1]
+        moves = []
+
+        if type(p) == Rook:
+            print("It's a rook!")
+
+            rots = [0,0,0,0]
+            poss = [[face,r,c] for i in range(4)]
+            for i in range(self.size):
+                tmprots = [0,0,0,0]
+                tmprots[0], poss[0] = self.move(poss[0], *self.rotate_v2d(-1, 0, True, rots[0]))
+                tmprots[1], poss[1] = self.move(poss[1], *self.rotate_v2d(1, 0, True, rots[1]))
+                tmprots[2], poss[2] = self.move(poss[2], *self.rotate_v2d(0, 1, True, rots[2]))
+                tmprots[3], poss[3] = self.move(poss[3], *self.rotate_v2d(0, -1, True, rots[3]))
+                for i in range(4):
+                    rots[i] += tmprots[i]
+                    moves.append(poss[i])
+
+        if type(p) == Bishop:
+            print("Bishop moment")
+
+            rots = [0 for i in range(8)]
+            poss = [[face,r,c] for i in range(8)]
+            for i in range(self.size):
+                tmprots = [0 for i in range(8)]
+                tmprots[0], poss[0] = self.move(poss[0], *self.rotate_v2d(0, -1, True, rots[0]))
+                tmprots[1], poss[1] = self.move(poss[1], *self.rotate_v2d(0, 1, True, rots[1]))
+                tmprots[2], poss[2] = self.move(poss[2], *self.rotate_v2d(-1, 0, True, rots[2]))
+                tmprots[3], poss[3] = self.move(poss[3], *self.rotate_v2d(1, 0, True, rots[3]))
+                tmprots[4], poss[4] = self.move(poss[4], *self.rotate_v2d(0, -1, True, rots[4]))
+                tmprots[5], poss[5] = self.move(poss[5], *self.rotate_v2d(0, 1, True, rots[5]))
+                tmprots[6], poss[6] = self.move(poss[6], *self.rotate_v2d(-1, 0, True, rots[6]))
+                tmprots[7], poss[7] = self.move(poss[7], *self.rotate_v2d(1, 0, True, rots[7]))
+                for i in range(8):
+                    rots[i] += tmprots[i]
+                tmprots[0], poss[0] = self.move(poss[0], *self.rotate_v2d(-1, 0, True, rots[0]))
+                tmprots[1], poss[1] = self.move(poss[1], *self.rotate_v2d(-1, 0, True, rots[1]))
+                tmprots[2], poss[2] = self.move(poss[2], *self.rotate_v2d(0, 1, True, rots[2]))
+                tmprots[3], poss[3] = self.move(poss[3], *self.rotate_v2d(0, 1, True, rots[3]))
+                tmprots[4], poss[4] = self.move(poss[4], *self.rotate_v2d(1, 0, True, rots[4]))
+                tmprots[5], poss[5] = self.move(poss[5], *self.rotate_v2d(1, 0, True, rots[5]))
+                tmprots[6], poss[6] = self.move(poss[6], *self.rotate_v2d(0, -1, True, rots[6]))
+                tmprots[7], poss[7] = self.move(poss[7], *self.rotate_v2d(0, -1, True, rots[7]))
+                for i in range(8):
+                    rots[i] += tmprots[i]
+                    moves.append(poss[i])
+
+        if type(p) == King:
+            print("King!")
+
+            rots = [0 for i in range(4)]
+            tmprots = rots[::]
+            poss = [[face, r, c] for i in range(8)]
+            _, poss[0] = self.move(poss[0], 0, -1)
+            _, poss[1] = self.move(poss[1], 0, 1)
+            _, poss[2] = self.move(poss[2], -1, 0)
+            _, poss[3] = self.move(poss[3], 1, 0)
+            tmprots[0], poss[4] = self.move(poss[4], 0, -1)
+            tmprots[1], poss[5] = self.move(poss[5], 0, 1)
+            tmprots[2], poss[6] = self.move(poss[6], 0, -1)
+            tmprots[3], poss[7] = self.move(poss[7], 0, 1)
+            for i in range(4):
+                rots[i] = tmprots[i]
+            tmprots[0], poss[4] = self.move(poss[4], *self.rotate_v2d(-1, 0, True, rots[i]))
+            tmprots[1], poss[5] = self.move(poss[5], *self.rotate_v2d(-1, 0, True, rots[i]))
+            tmprots[2], poss[6] = self.move(poss[6], *self.rotate_v2d(1, 0, True, rots[i]))
+            tmprots[3], poss[7] = self.move(poss[7], *self.rotate_v2d(1, 0, True, rots[i]))
+
+            for i in range(8):
+                moves.append(poss[i])
+
+
+        return moves
 
     # Index is of the form (face, row, col)
     def __getitem__(self, index):

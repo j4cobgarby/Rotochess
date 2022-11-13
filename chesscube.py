@@ -1,5 +1,6 @@
 import pyray as pr
 from loopgrid import LoopCube
+from piece import *
 
 cols = [pr.RED,pr.ORANGE,pr.GREEN,pr.YELLOW,pr.PURPLE,pr.BLUE,pr.WHITE]
 
@@ -30,6 +31,13 @@ class ChessCube:
         # Initilise Cubelet Array
         self.cubelets = [[[] for i in range(0,size)]for i in range(0,size)]
         self.pieces = LoopCube(size)
+        self.pieces[0, size//2, size//2] = [0, Bishop(Piece.WHITE)]
+
+        m = self.pieces.get_valid_moves(0, self.size//2, self.size//2)
+        for mv in m:
+            self.pieces[mv][0] = 6
+
+        print(m)
 
 
     # ^
@@ -68,7 +76,7 @@ class ChessCube:
             for c in range(size):
                 offset = addv(sclv(r_dir, r), sclv(c_dir, c))
                 pr.draw_cube(addv(offset, face_center), 0.8,0.1,0.8, cols[face[r][c][0]])
-                if face[r][c][1].mesh != None:
+                if face[r][c][1] != None:
                     pr.draw_model_ex(face[r][c][1].mesh,addv(offset, face_center), rots[face_num][0],rots[face_num][1],pr.Vector3(0.2, 0.2, 0.2),pr.WHITE)
                 #pr.draw_cube(addv(face_center, pr.Vector3(r,0,c)), 0.8, 0.05, 0.8, pr.WHITE if face[r][c] == 1 else col)
 
@@ -85,7 +93,7 @@ class ChessCube:
             for c in range(size):
                 offset = addv(sclv(r_dir, r), sclv(c_dir, c))
                 pr.draw_cube(addv(offset, face_center), 0.8, 0.8, 0.1, cols[face[r][c][0]])
-                if face[r][c][1].mesh != None:
+                if face[r][c][1] != None:
                     pr.draw_model_ex(face[r][c][1].mesh,addv(offset, face_center), rots[face_num][0],rots[face_num][1],pr.Vector3(0.2, 0.2, 0.2),pr.WHITE)
 
     def draw_zy_face(self,face_num, face_center, r_dir, c_dir, size):
@@ -101,7 +109,7 @@ class ChessCube:
             for c in range(size):
                 offset = addv(sclv(r_dir, r), sclv(c_dir, c))
                 pr.draw_cube(addv(offset, face_center), 0.1, 0.8, 0.8, cols[face[r][c][0]])
-                if face[r][c][1].mesh != None:
+                if face[r][c][1] != None:
                     pr.draw_model_ex(face[r][c][1].mesh,addv(offset, face_center), rots[face_num][0],rots[face_num][1],pr.Vector3(0.2, 0.2, 0.2),pr.WHITE)
 
 
